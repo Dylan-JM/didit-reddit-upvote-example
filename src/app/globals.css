@@ -91,3 +91,33 @@
   height: 0;
   pointer-events: none;
 }
+/* Lists and blockquote in editor so they’re visible while typing */
+.ProseMirror ul {
+  list-style-type: disc;
+  padding-left: 1.5rem;
+  margin: 0.5rem 0;
+}
+.ProseMirror ol {
+  list-style-type: decimal;
+  padding-left: 1.5rem;
+  margin: 0.5rem 0;
+}
+.ProseMirror blockquote {
+  border-left: 4px solid #d1d5db;
+  padding-left: 1rem;
+  margin: 0.5rem 0;
+  color: #4b5563;
+}
+.ProseMirror pre {
+  background: #f3f4f6;
+  padding: 0.75rem 1rem;
+  border-radius: 0.375rem;
+  overflow-x: auto;
+  margin: 0.5rem 0;
+  font-family: ui-monospace, monospace;
+  font-size: 0.875em;
+}
+.ProseMirror pre code {
+  background: none;
+  padding: 0;
+}

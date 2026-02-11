@@ -10,11 +10,25 @@ function EditorToolbar({ editor }) {
   const buttonClass =
     "p-2 rounded hover:bg-zinc-200 disabled:opacity-40 disabled:cursor-not-allowed border-0 bg-transparent font-semibold text-sm";
 
+  // Use onMouseDown + preventDefault so the editor keeps focus and selection when clicking the toolbar
+  function makeHandler(command) {
+    return (e) => {
+      e.preventDefault();
+      command().run();
+    };
+  }
+
+  // Block-level commands: use wrapIn / wrapInList / setCodeBlock so they work reliably
+  const wrapBlockquote = () => editor.chain().focus().wrapIn("blockquote");
+  const wrapBulletList = () => editor.chain().focus().wrapInList("bulletList");
+  const wrapOrderedList = () => editor.chain().focus().wrapInList("orderedList");
+  const setCodeBlock = () => editor.chain().focus().setCodeBlock();
+
   return (
     <div className="flex flex-wrap gap-1 p-2 border-b border-zinc-200 bg-zinc-50">
       <button
         type="button"
-        onClick={() => editor.chain().focus().toggleBold().run()}
+        onMouseDown={makeHandler(() => editor.chain().focus().toggleBold())}
         className={`${buttonClass} ${editor.isActive("bold") ? "bg-zinc-300" : ""}`}
         title="Bold (Ctrl+B)"
       >
@@ -22,7 +36,7 @@ function EditorToolbar({ editor }) {
       </button>
       <button
         type="button"
-        onClick={() => editor.chain().focus().toggleItalic().run()}
+        onMouseDown={makeHandler(() => editor.chain().focus().toggleItalic())}
         className={`${buttonClass} ${editor.isActive("italic") ? "bg-zinc-300" : ""}`}
         title="Italic (Ctrl+I)"
       >
@@ -30,16 +44,16 @@ function EditorToolbar({ editor }) {
       </button>
       <button
         type="button"
-        onClick={() => editor.chain().focus().toggleCode().run()}
+        onMouseDown={makeHandler(() => editor.chain().focus().toggleCode())}
         className={`${buttonClass} ${editor.isActive("code") ? "bg-zinc-300" : ""}`}
-        title="Inline code"
+        title="Inline code (highlight only)"
       >
         &lt;/&gt;
       </button>
       <span className="w-px self-stretch bg-zinc-300 mx-1" aria-hidden />
       <button
         type="button"
-        onClick={() => editor.chain().focus().toggleBulletList().run()}
+        onMouseDown={makeHandler(wrapBulletList)}
         className={`${buttonClass} ${editor.isActive("bulletList") ? "bg-zinc-300" : ""}`}
         title="Bullet list"
       >
@@ -47,7 +61,7 @@ function EditorToolbar({ editor }) {
       </button>
       <button
         type="button"
-        onClick={() => editor.chain().focus().toggleOrderedList().run()}
+        onMouseDown={makeHandler(wrapOrderedList)}
         className={`${buttonClass} ${editor.isActive("orderedList") ? "bg-zinc-300" : ""}`}
         title="Numbered list"
       >
@@ -55,15 +69,15 @@ function EditorToolbar({ editor }) {
       </button>
       <button
         type="button"
-        onClick={() => editor.chain().focus().toggleCodeBlock().run()}
+        onMouseDown={makeHandler(setCodeBlock)}
         className={`${buttonClass} ${editor.isActive("codeBlock") ? "bg-zinc-300" : ""}`}
-        title="Code block"
+        title="Code block (full block)"
       >
         Code
       </button>
       <button
         type="button"
-        onClick={() => editor.chain().focus().toggleBlockquote().run()}
+        onMouseDown={makeHandler(wrapBlockquote)}
         className={`${buttonClass} ${editor.isActive("blockquote") ? "bg-zinc-300" : ""}`}
         title="Quote"
       >
