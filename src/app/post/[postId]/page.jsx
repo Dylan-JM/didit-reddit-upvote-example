@@ -4,6 +4,17 @@ import { Vote } from "@/components/Vote";
 import { db } from "@/db";
 import { notFound } from "next/navigation";
 
+export async function generateMetadata({ params }) {
+  const { postId } = await params;
+  const { rows } = await db.query(
+    "SELECT title FROM posts WHERE id = $1",
+    [postId]
+  );
+  const post = rows[0];
+  if (!post) return { title: "Post" };
+  return { title: `${post.title} | Didit` };
+}
+
 export default async function SinglePostPage({ params }) {
   const { postId } = await params;
 
