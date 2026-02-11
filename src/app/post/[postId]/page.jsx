@@ -49,7 +49,10 @@ export default async function SinglePostPage({ params }) {
           <p className="text-zinc-400 mb-4">Posted by {post.name}</p>
         </div>
       </div>
-      <main className="whitespace-pre-wrap m-4">{post.body}</main>
+      <main
+        className="m-4 post-body"
+        dangerouslySetInnerHTML={{ __html: post.body || "" }}
+      />
 
       <CommentForm postId={post.id} />
       <CommentList postId={post.id} />
