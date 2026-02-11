@@ -2,9 +2,10 @@ import { CommentForm } from "@/components/CommentForm";
 import { CommentList } from "@/components/CommentList";
 import { Vote } from "@/components/Vote";
 import { db } from "@/db";
+import { notFound } from "next/navigation";
 
 export default async function SinglePostPage({ params }) {
-  const postId = params.postId;
+  const { postId } = await params;
 
   const { rows: posts } = await db.query(
     `SELECT posts.id, posts.title, posts.body, posts.created_at, users.name, 
@@ -18,6 +19,10 @@ export default async function SinglePostPage({ params }) {
     [postId]
   );
   const post = posts[0];
+
+  if (!post) {
+    notFound();
+  }
 
   const { rows: votes } = await db.query(
     `SELECT *, users.name from votes
