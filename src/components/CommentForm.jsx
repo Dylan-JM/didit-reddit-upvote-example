@@ -1,17 +1,16 @@
 "use client";
 
 import { saveComment } from "@/actions/comments";
-import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
-import { useFormState } from "react-dom";
+import { useActionState } from "react";
 import { CommentFormButton } from "./CommentFormButton";
 
 export function CommentForm({ postId, parentCommentId }) {
-  const [state, dispatch] = useFormState(saveComment, {
+  const [state, dispatch] = useActionState(saveComment, {
     postId,
     parentCommentId,
   });
-  const boundDispatch = dispatch.bind({ postId, parentCommentId });
+  const boundDispatch = dispatch;
   const [isOpen, setOpen] = useState(false);
 
   useEffect(() => {
@@ -27,6 +26,9 @@ export function CommentForm({ postId, parentCommentId }) {
       </button>
       {isOpen ? (
         <>
+          {state?.error && (
+            <p className="text-red-500 text-sm mb-2">{state.error}</p>
+          )}
           <form action={boundDispatch} className="flex flex-col space-y-3">
             <textarea
               name="comment"

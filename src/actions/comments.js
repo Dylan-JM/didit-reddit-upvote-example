@@ -4,8 +4,12 @@ import { auth } from "@/auth";
 import { db } from "@/db";
 import { revalidatePath } from "next/cache";
 
-export async function saveComment({ postId, parentCommentId }, formData) {
+export async function saveComment(state, formData) {
+  const { postId, parentCommentId } = state;
   const session = await auth();
+  if (!session?.user?.id) {
+    return { ...state, error: "Please log in to comment." };
+  }
 
   await db.query(
     "INSERT INTO comments (user_id, post_id, parent_comment_id, body) VALUES ($1, $2, $3, $4)",
@@ -13,5 +17,5 @@ export async function saveComment({ postId, parentCommentId }, formData) {
   );
 
   revalidatePath(`/post/${postId}`);
-  return { success: true };
+  return { postId, parentCommentId, success: true };
 }
