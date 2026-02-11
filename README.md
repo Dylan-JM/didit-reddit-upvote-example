@@ -46,3 +46,10 @@ The project is a work in progress and is not yet complete.
 - [ ] User following
 - [ ] User feed (posts from users you follow)
 - [ ] User flair
+
+## Reflection
+
+- Deployed to vercel
+- Fix page titles to match post pages
+- Users cannot vote more than once
+- TipTap added for more unique posts
